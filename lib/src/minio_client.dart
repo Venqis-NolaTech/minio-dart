@@ -182,7 +182,7 @@ class MinioClient {
     Map<String, dynamic>? queries,
     Map<String, String>? headers,
     void Function(int)? onProgress,
-    void Function(MinioRequestProgressData)? onDetailsProgress,
+    void Function(MinioRequestProgressData)? onSendProgress,
     CancelToken? cancelToken,
   }) async {
     if (bucket != null) {
@@ -200,7 +200,7 @@ class MinioClient {
       queries,
       headers,
       onProgress,
-      onDetailsProgress,
+      onSendProgress,
       cancelToken,
     );
     request.body = payload;
@@ -247,7 +247,7 @@ class MinioClient {
       queries: queries,
       headers: headers,
       onProgress: onProgress,
-      onDetailsProgress: onSendProgress,
+      onSendProgress: onSendProgress,
       cancelToken: cancelToken,
     );
 
