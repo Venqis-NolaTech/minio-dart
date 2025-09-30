@@ -565,7 +565,7 @@ class Minio {
 
     if (maxKeys != null) {
       maxKeys = maxKeys >= 1000 ? 1000 : maxKeys;
-      queries['maxKeys'] = maxKeys.toString();
+      queries['max-keys'] = maxKeys.toString();
     }
 
     final resp = await _client.request(
@@ -675,7 +675,7 @@ class Minio {
 
     if (maxKeys != null) {
       maxKeys = maxKeys >= 1000 ? 1000 : maxKeys;
-      queries['maxKeys'] = maxKeys.toString();
+      queries['max-keys'] = maxKeys.toString();
     }
 
     final resp = await _client.request(

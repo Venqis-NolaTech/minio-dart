@@ -1,3 +1,22 @@
+# 3.5.8
+
+- Fix path encoding for space and plus characters in object names to prevent signature mismatch errors #7
+- Update fPutObject method signature to use named parameters for better API consistency
+
+# 3.5.7
+
+- fix maxKeys error while using listObject query #97
+- Bump intl from 0.19.0 to 0.20.0 in the root-pub group #96
+
+# 3.5.6
+
+- Fix non en-US date time parse #95
+
+# 3.5.5
+
+- Move x-amz-security-token allocation before signV4 to correctly sign the request #92
+- Bump mime from 1.0.6 to 2.0.0 in the root-pub group #91
+
 # 3.5.4
 
 - Add validation for HTTP response for `getObjectACL` / Make retrieval of ACLs optional for `statObject` #48

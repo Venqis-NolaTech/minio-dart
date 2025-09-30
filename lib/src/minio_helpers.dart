@@ -278,6 +278,12 @@ String encodePath(Uri uri) {
       continue;
     }
 
+    // Special handling for space and plus sign
+    if (char == ' '.codeUnitAt(0) || char == '+'.codeUnitAt(0)) {
+      result.write('%20');
+      continue;
+    }
+
     result.write('%');
     result.write(hex.encode([char]).toUpperCase());
   }

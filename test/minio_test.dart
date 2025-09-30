@@ -220,7 +220,7 @@ void testFPutObject() {
       };
 
       final minio = getMinioClient();
-      await minio.fPutObject(bucketName, objectName, testFile.path, metadata);
+      await minio.fPutObject(bucketName, objectName, testFile.path, metadata: metadata);
 
       final stat = await minio.statObject(bucketName, objectName);
       expect(
@@ -237,7 +237,7 @@ void testFPutObject() {
       };
 
       final minio = getMinioClient();
-      await minio.fPutObject(bucketName, objectName, testFile.path, metadata);
+      await minio.fPutObject(bucketName, objectName, testFile.path, metadata: metadata);
 
       final stat = await minio.statObject(bucketName, objectName);
       expect(

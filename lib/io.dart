@@ -11,9 +11,10 @@ extension MinioX on Minio {
   Future<String> fPutObject(
     String bucket,
     String object,
-    String filePath, [
+    String filePath, {
     Map<String, String>? metadata,
-  ]) async {
+    void Function(int)? onProgress,
+  }) async {
     MinioInvalidBucketNameError.check(bucket);
     MinioInvalidObjectNameError.check(object);
 
@@ -35,6 +36,7 @@ extension MinioX on Minio {
       file.openRead().cast<Uint8List>(),
       size: stat.size,
       metadata: metadata,
+      onProgress: onProgress,
     );
   }
 
