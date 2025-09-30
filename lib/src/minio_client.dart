@@ -5,21 +5,10 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:minio/minio.dart';
 import 'package:minio/src/minio_helpers.dart';
+import 'package:minio/src/minio_models.dart';
 import 'package:minio/src/minio_s3.dart';
 import 'package:minio/src/minio_sign.dart';
 import 'package:minio/src/utils.dart';
-
-class MinioRequestProgressData {
-  MinioRequestProgressData({
-    required this.totalFileSize,
-    required this.sentFileSize,
-    required this.progress,
-  });
-
-  final int totalFileSize;
-  final int sentFileSize;
-  final double progress;
-}
 
 class MinioRequest {
   MinioRequest(

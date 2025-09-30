@@ -195,3 +195,15 @@ class PostPolicyResult {
   final String? postURL;
   final Map<String, String>? formData;
 }
+
+class MinioRequestProgressData {
+  MinioRequestProgressData({
+    required this.totalFileSize,
+    required this.sentFileSize,
+    required this.progress,
+  });
+
+  final int totalFileSize;
+  final int sentFileSize;
+  final double progress;
+}
