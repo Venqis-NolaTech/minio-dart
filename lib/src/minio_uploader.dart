@@ -22,6 +22,7 @@ class MinioUploader implements StreamConsumer<Uint8List> {
     this.partSize,
     this.metadata,
     this.onProgress,
+    this.onSendProgress,
     this.cancelToken,
   );
 
@@ -32,6 +33,7 @@ class MinioUploader implements StreamConsumer<Uint8List> {
   final int partSize;
   final Map<String, String> metadata;
   final void Function(int)? onProgress;
+  final void Function(MinioRequestProgressData)? onSendProgress;
   final CancelToken? cancelToken;
 
   var _partNumber = 1;
@@ -129,6 +131,7 @@ class MinioUploader implements StreamConsumer<Uint8List> {
       object: object,
       payload: chunk,
       onProgress: _updateProgress,
+      onSendProgress: onSendProgress,
       cancelToken: cancelToken,
     );
 

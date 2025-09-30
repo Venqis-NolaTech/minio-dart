@@ -9,12 +9,31 @@ import 'package:minio/src/minio_s3.dart';
 import 'package:minio/src/minio_sign.dart';
 import 'package:minio/src/utils.dart';
 
+class MinioRequestProgressData {
+  MinioRequestProgressData({
+    required this.totalFileSize,
+    required this.sentFileSize,
+    required this.progress,
+  });
+
+  final int totalFileSize;
+  final int sentFileSize;
+  final double progress;
+}
+
 class MinioRequest {
-  MinioRequest(this.method, this.url, {this.onProgress, this.cancelToken});
+  MinioRequest(
+    this.method,
+    this.url, {
+    this.onProgress,
+    this.onSendProgress,
+    this.cancelToken,
+  });
 
   final String method;
   final Uri url;
   final void Function(int)? onProgress;
+  final void Function(MinioRequestProgressData)? onSendProgress;
   final CancelToken? cancelToken;
 
   dynamic body;
@@ -48,7 +67,21 @@ class MinioRequest {
           responseType: ResponseType.stream,
         ),
         onReceiveProgress: (p, t) => onProgress?.call(p),
-        onSendProgress: (p, t) => onProgress?.call(p),
+        onSendProgress: (p, t) {
+          final sentFileSize = p;
+          final totalFileSize = t;
+
+          final progress = (p / t);
+
+          onProgress?.call(p);
+          onSendProgress?.call(
+            MinioRequestProgressData(
+              totalFileSize: totalFileSize,
+              sentFileSize: sentFileSize,
+              progress: progress,
+            ),
+          );
+        },
       );
 
       return response;
@@ -160,6 +193,7 @@ class MinioClient {
     Map<String, dynamic>? queries,
     Map<String, String>? headers,
     void Function(int)? onProgress,
+    void Function(MinioRequestProgressData)? onDetailsProgress,
     CancelToken? cancelToken,
   }) async {
     if (bucket != null) {
@@ -177,6 +211,7 @@ class MinioClient {
       queries,
       headers,
       onProgress,
+      onDetailsProgress,
       cancelToken,
     );
     request.body = payload;
@@ -210,6 +245,7 @@ class MinioClient {
     Map<String, dynamic>? queries,
     Map<String, String>? headers,
     void Function(int)? onProgress,
+    void Function(MinioRequestProgressData)? onSendProgress,
     CancelToken? cancelToken,
   }) async {
     final stream = await _request(
@@ -222,6 +258,7 @@ class MinioClient {
       queries: queries,
       headers: headers,
       onProgress: onProgress,
+      onDetailsProgress: onSendProgress,
       cancelToken: cancelToken,
     );
 
@@ -242,7 +279,7 @@ class MinioClient {
     Map<String, String>? headers,
     CancelToken? cancelToken,
   }) async {
-    final _response = await _request(
+    final response_ = await _request(
       method: method,
       bucket: bucket,
       object: object,
@@ -254,7 +291,7 @@ class MinioClient {
       cancelToken: cancelToken,
     );
 
-    MinioResponse response = await MinioResponse.fromStream(_response);
+    MinioResponse response = await MinioResponse.fromStream(response_);
 
     logResponse(response);
     return response;
@@ -269,11 +306,17 @@ class MinioClient {
     Map<String, dynamic>? queries,
     Map<String, String>? headers,
     void Function(int)? onProgress,
+    void Function(MinioRequestProgressData)? onSendProgress,
     CancelToken? cancelToken,
   ) {
     final url = getRequestUrl(bucket, object, resource, queries);
-    final request = MinioRequest(method, url,
-        onProgress: onProgress, cancelToken: cancelToken);
+    final request = MinioRequest(
+      method,
+      url,
+      onProgress: onProgress,
+      onSendProgress: onSendProgress,
+      cancelToken: cancelToken,
+    );
     request.headers['host'] = url.authority;
 
     if (headers != null) {
