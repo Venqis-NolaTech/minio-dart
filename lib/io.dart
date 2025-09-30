@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:minio/src/minio.dart';
+import 'package:minio/src/minio_client.dart';
 import 'package:minio/src/minio_errors.dart';
 import 'package:minio/src/minio_helpers.dart';
 import 'package:path/path.dart' show dirname;
@@ -14,6 +15,7 @@ extension MinioX on Minio {
     String filePath, {
     Map<String, String>? metadata,
     void Function(int)? onProgress,
+    void Function(MinioRequestProgressData)? onSendProgress,
   }) async {
     MinioInvalidBucketNameError.check(bucket);
     MinioInvalidObjectNameError.check(object);
@@ -37,6 +39,7 @@ extension MinioX on Minio {
       size: stat.size,
       metadata: metadata,
       onProgress: onProgress,
+      onSendProgress: onSendProgress,
     );
   }
 
