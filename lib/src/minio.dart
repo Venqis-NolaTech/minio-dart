@@ -858,6 +858,7 @@ class Minio {
           null,
           null,
           null,
+          null,
         )
         .url;
     var portStr = (port == 80 || port == 443) ? '' : ':$port';
@@ -921,6 +922,7 @@ class Minio {
       {},
       null,
       null,
+      null,
     );
     return presignSignatureV4(this, request, region, requestDate, expires);
   }
@@ -935,6 +937,7 @@ class Minio {
     Map<String, String>? metadata,
     CancelToken? cancelToken,
     void Function(int)? onProgress,
+    void Function(MinioRequestProgressData)? onSendProgress,
   }) async {
     MinioInvalidBucketNameError.check(bucket);
     MinioInvalidObjectNameError.check(object);
@@ -959,6 +962,7 @@ class Minio {
       partSize,
       metadata,
       onProgress,
+      onSendProgress,
       cancelToken,
     );
     final chunker = MinChunkSize(partSize);
